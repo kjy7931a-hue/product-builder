@@ -165,7 +165,84 @@
         </div>
 
         <button class="main-button" onclick="generateFiveGames()">번호 5줄 한 번에 뽑기</button>
+
+        <div class="contact-section">
+            <hr>
+            <h3>📩 제품 문의하기</h3>
+            <form action="https://formspree.io/f/xzdqzjnl" method="POST">
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="이름" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="_replyto" placeholder="이메일 주소" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="message" placeholder="문의하실 내용을 입력해주세요" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="submit-button">문의 보내기</button>
+            </form>
+        </div>
     </div>
+
+    <style>
+        /* 기존 스타일에 추가 */
+        .contact-section {
+            margin-top: 40px;
+            text-align: left;
+        }
+        
+        .contact-section hr {
+            border: 0;
+            border-top: 1px solid var(--row-border);
+            margin-bottom: 25px;
+        }
+
+        .contact-section h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group input, 
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--row-border);
+            border-radius: 8px;
+            background-color: var(--row-bg);
+            color: var(--text-color);
+            box-sizing: border-box;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--button-bg);
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #10b981; /* 초록색 계열로 차별화 */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .submit-button:hover {
+            background-color: #059669;
+        }
+    </style>
 
     <script>
         // 테마 관련 기능
