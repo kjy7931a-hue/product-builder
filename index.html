@@ -488,13 +488,13 @@
             document.getElementById('result-container').style.display = 'block';
             
             for (let i = 0; i < maxPredictions; i++) {
-                const className = prediction[i].className; // "강아지" or "고양이"
+                const className = prediction[i].className.toLowerCase(); // "dog" or "cat"
                 const probability = (prediction[i].probability * 100).toFixed(1);
                 
-                if (className === "강아지") {
+                if (className === "dog") {
                     document.getElementById('dog-fill').style.width = probability + "%";
                     document.getElementById('dog-percent').innerText = probability + "%";
-                } else if (className === "고양이") {
+                } else if (className === "cat") {
                     document.getElementById('cat-fill').style.width = probability + "%";
                     document.getElementById('cat-percent').innerText = probability + "%";
                 }
