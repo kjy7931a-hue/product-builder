@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>행운의 로또 번호 추천기 (5게임)</title>
+    <style>
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 550px; /* 화면에 너무 퍼지지 않게 크기를 잡아줘요 */
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+
+        /* 5개의 줄을 감싸는 전체 큰 상자예요 */
+        .lotto-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* 줄과 줄 사이의 간격 */
+            margin-bottom: 30px;
+        }
+
+        /* 로또 번호 6개가 들어가는 한 줄(한 게임)의 디자인이에요 */
+        .game-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #fafafa;
+            padding: 10px 15px;
+            border-radius: 12px;
+            border: 1px dashed #ddd;
+        }
+
+        /* 왼쪽의 "A 자동", "B 자동" 같은 글자 스타일이에요 */
+        .game-label {
+            font-weight: bold;
+            color: #666;
+            font-size: 14px;
+            width: 50px;
+            text-align: left;
+        }
+
+        /* 공들을 모아두는 상자예요 */
+        .ball-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* 로또 공의 모양이에요 */
+        .ball {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #ddd;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.08);
+            animation: grow 0.3s ease-in-out;
+        }
+
+        @keyframes grow {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        /* 번호대별 색상 규칙이에요 */
+        .ball.color-1 { background-color: #fbc02d; }
+        .ball.color-2 { background-color: #1e88e5; }
+        .ball.color-3 { background-color: #e53935; }
+        .ball.color-4 { background-color: #8e24aa; }
+        .ball.color-5 { background-color: #43a047; }
+
+        button {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            width: 100%; /* 버튼을 큼직하게 만들어줘요 */
+        }
+
+        button:hover { background-color: #4338ca; }
+        button:active { transform: scale(0.98); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🔮 대박 기원! 로또 번호 추천기 (5게임)</h1>
+        
+        <div id="lottoWrapper" class="lotto-wrapper">
+            <script>
+                // 처음에 물음표 공 6개씩 5줄(A~E)을 보여주는 임시 코드예요
+                const labels = ['A', 'B', 'C', 'D', 'E'];
+                labels.forEach(label => {
+                    document.write(`
+                        <div class="game-row">
+                            <div class="game-label">${label} 확인</div>
+                            <div class="ball-container">
+                                <div class="ball">?</div><div class="ball">?</div><div class="ball">?</div>
+                                <div class="ball">?</div><div class="ball">?</div><div class="ball">?</div>
+                            </div>
+                        </div>
+                    `);
+                });
+            </script>
+        </div>
+
+        <button onclick="generateFiveGames()">번호 5줄 한 번에 뽑기</button>
+    </div>
+
+    <script>
+        // 6개 번호 1세트를 만드는 기능이에요 (저번이랑 똑같아요!)
+        function makeOneGame() {
+            const numbers = [];
+            while (numbers.length < 6) {
+                const randomNum = Math.floor(Math.random() * 45) + 1;
+                if (!numbers.includes(randomNum)) {
+                    numbers.push(randomNum);
+                }
+            }
+            return numbers.sort((a, b) => a - b);
+        }
+
+        // 버튼을 누르면 이 기능이 실행되어 5줄을 만들어내요!
+        function generateFiveGames() {
+            const lottoWrapper = document.getElementById('lottoWrapper');
+            lottoWrapper.innerHTML = ''; // 기존에 있던 공들을 싹 지워요
+
+            const alphabet = ['A', 'B', 'C', 'D', 'E']; // 줄마다 붙여줄 이름표예요
+
+            // 5번 반복해서 5개의 줄을 만들 거예요
+            for (let i = 0; i < 5; i++) {
+                // 1. 번호 6개를 하나 뽑아옵니다
+                const gameNumbers = makeOneGame();
+
+                // 2. 한 줄을 담을 큰 틀을 만들고 이름표(A~E)를 달아줘요
+                const row = document.createElement('div');
+                row.classList.add('game-row');
+
+                const label = document.createElement('div');
+                label.classList.add('game-label');
+                label.innerText = alphabet[i] + ' 자동';
+                row.appendChild(label);
+
+                // 3. 공 6개를 담을 주머니를 만들어요
+                const ballContainer = document.createElement('div');
+                ballContainer.classList.add('ball-container');
+
+                // 4. 번호 6개를 공으로 만들어서 주머니에 채워 넣습니다
+                gameNumbers.forEach(num => {
+                    const ball = document.createElement('div');
+                    ball.classList.add('ball');
+                    ball.innerText = num;
+
+                    // 숫자에 맞게 예쁜 옷을 입혀줘요
+                    if (num <= 10) ball.classList.add('color-1');
+                    else if (num <= 20) ball.classList.add('color-2');
+                    else if (num <= 30) ball.classList.add('color-3');
+                    else if (num <= 40) ball.classList.add('color-4');
+                    else ball.classList.add('color-5');
+
+                    ballContainer.appendChild(ball);
+                });
+
+                // 5. 완성된 주머니를 한 줄 틀에 넣고, 그걸 다시 전체 화면에 추가해요
+                row.appendChild(ballContainer);
+                lottoWrapper.appendChild(row);
+            }
+        }
+    </script>
+
+</body>
+</html>
