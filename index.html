@@ -180,12 +180,18 @@
             display: flex; align-items: center; justify-content: space-between;
             padding: 1.2rem; border-radius: 1rem; border: 1px solid var(--border-color);
             background: var(--bg-color);
+            flex-wrap: wrap; gap: 1rem;
         }
-        .ball-container { display: flex; gap: 0.6rem; }
+        .ball-container { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+        .bonus-section { display: flex; align-items: center; gap: 0.6rem; }
+        .plus-sign { font-weight: 800; font-size: 1.2rem; color: var(--secondary-color); }
+        .bonus-label { font-size: 0.75rem; font-weight: 700; color: var(--secondary-color); margin-bottom: 2px; text-align: center; }
+        .ball-wrapper { display: flex; flex-direction: column; align-items: center; }
         .ball {
             width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
             color: white; font-weight: 800; font-size: 1rem; background: #ddd;
             box-shadow: inset 0 -3px rgba(0,0,0,0.1);
+            transition: var(--transition);
         }
         .ball.color-1 { background: #fbc02d; }
         .ball.color-2 { background: #1e88e5; }
@@ -422,7 +428,18 @@
             ['A','B','C','D','E'].forEach(l => {
                 const row = document.createElement('div');
                 row.className = 'game-row';
-                row.innerHTML = `<span style="font-weight:800; font-size: 1.1rem;">${l}</span><div class="ball-container">${Array(6).fill('<div class="ball">?</div>').join('')}</div>`;
+                row.innerHTML = `
+                    <span style="font-weight:800; font-size: 1.1rem; min-width: 50px;">${l}</span>
+                    <div class="ball-container">
+                        ${Array(6).fill('<div class="ball">?</div>').join('')}
+                    </div>
+                    <div class="bonus-section">
+                        <span class="plus-sign">+</span>
+                        <div class="ball-wrapper">
+                            <span class="bonus-label">보너스</span>
+                            <div class="ball">?</div>
+                        </div>
+                    </div>`;
                 wrapper.appendChild(row);
             });
         }
@@ -432,19 +449,33 @@
             wrapper.innerHTML = '';
             ['A','B','C','D','E'].forEach(l => {
                 const nums = [];
-                while(nums.length < 6) {
+                while(nums.length < 7) {
                     const r = Math.floor(Math.random() * 45) + 1;
                     if(!nums.includes(r)) nums.push(r);
                 }
+                
+                const bonus = nums.pop();
                 nums.sort((a,b) => a-b);
                 
-                const row = document.createElement('div');
-                row.className = 'game-row';
                 const balls = nums.map(n => {
                     let c = n <= 10 ? '1' : n <= 20 ? '2' : n <= 30 ? '3' : n <= 40 ? '4' : '5';
                     return `<div class="ball color-${c}">${n}</div>`;
                 }).join('');
-                row.innerHTML = `<span style="font-weight:800; font-size: 1.1rem;">${l} 자동</span><div class="ball-container">${balls}</div>`;
+
+                const bonusColor = bonus <= 10 ? '1' : bonus <= 20 ? '2' : bonus <= 30 ? '3' : bonus <= 40 ? '4' : '5';
+                
+                const row = document.createElement('div');
+                row.className = 'game-row';
+                row.innerHTML = `
+                    <span style="font-weight:800; font-size: 1.1rem; min-width: 50px;">${l} 자동</span>
+                    <div class="ball-container">${balls}</div>
+                    <div class="bonus-section">
+                        <span class="plus-sign">+</span>
+                        <div class="ball-wrapper">
+                            <span class="bonus-label">보너스</span>
+                            <div class="ball color-${bonusColor}">${bonus}</div>
+                        </div>
+                    </div>`;
                 wrapper.appendChild(row);
             });
         }
