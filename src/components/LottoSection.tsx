@@ -37,6 +37,17 @@ export default function LottoSection({ t }: LottoSectionProps) {
     const highCount = nums.filter(n => n >= 23).length;
     if (highCount < 2 || highCount > 4) return false;
 
+    // 4. 번호대별 균형 필터 (Group Clustering): 한 번호대 대역에 4개 이상 몰리는 조합 제외
+    const groupCounts = [0, 0, 0, 0, 0];
+    nums.forEach(n => {
+      if (n <= 10) groupCounts[0]++;
+      else if (n <= 20) groupCounts[1]++;
+      else if (n <= 30) groupCounts[2]++;
+      else if (n <= 40) groupCounts[3]++;
+      else groupCounts[4]++;
+    });
+    if (groupCounts.some(c => c >= 4)) return false;
+
     return true;
   }
 
