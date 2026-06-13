@@ -5,16 +5,28 @@ import LottoSection from './components/LottoSection';
 import AnimalSection from './components/AnimalSection';
 import Articles from './components/Articles';
 import Footer from './components/Footer';
+import { translations } from './translations';
+import type { Language } from './translations';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'lotto' | 'animal'>('lotto');
+  const [lang, setLang] = useState<Language>(() => {
+    return (localStorage.getItem('lang') as Language) || 'en';
+  });
+
+  const changeLang = (l: Language) => {
+    setLang(l);
+    localStorage.setItem('lang', l);
+  };
+
+  const t = translations[lang];
 
   return (
     <>
-      <Header activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Header activeTab={activeTab} setActiveTab={setActiveTab} lang={lang} changeLang={changeLang} t={t} />
       
       <main>
-        <Hero />
+        <Hero t={t} />
         
         <div className="container">
           <div className="tabs">
@@ -22,24 +34,24 @@ export default function App() {
               className={`tab-btn ${activeTab === 'lotto' ? 'active' : ''}`} 
               onClick={() => setActiveTab('lotto')}
             >
-              로또 알고리즘
+              {t.tabLotto}
             </button>
             <button 
               className={`tab-btn ${activeTab === 'animal' ? 'active' : ''}`} 
               onClick={() => setActiveTab('animal')}
             >
-              동물상 AI 테스트
+              {t.tabAnimal}
             </button>
           </div>
 
-          {activeTab === 'lotto' && <LottoSection />}
-          {activeTab === 'animal' && <AnimalSection />}
+          {activeTab === 'lotto' && <LottoSection t={t} />}
+          {activeTab === 'animal' && <AnimalSection t={t} />}
         </div>
 
-        <Articles />
+        <Articles t={t} />
       </main>
 
-      <Footer />
+      <Footer t={t} />
     </>
   );
 }

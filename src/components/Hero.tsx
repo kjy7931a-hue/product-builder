@@ -1,10 +1,14 @@
 import React from 'react';
 
-export default function Hero() {
+interface HeroProps {
+  t: any;
+}
+
+export default function Hero({ t }: HeroProps) {
   return (
     <section className="hero-section">
-      <h1>🔮 LottoFace AI</h1>
-      <p>AI 동물상 관상 분석과 통계 엔진 기반 행운의 로또 예측 번호를 지금 바로 만나보세요!</p>
+      <h1>{t.heroTitle}</h1>
+      <p>{t.heroDesc}</p>
     </section>
   );
 }

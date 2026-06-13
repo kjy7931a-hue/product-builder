@@ -2,7 +2,11 @@ import React, { useState, useRef } from 'react';
 
 const MODEL_URL = "https://teachablemachine.withgoogle.com/models/M26t_mTBp/";
 
-export default function AnimalSection() {
+interface AnimalSectionProps {
+  t: any;
+}
+
+export default function AnimalSection({ t }: AnimalSectionProps) {
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [dogPercent, setDogPercent] = useState<number>(0);
@@ -12,7 +16,6 @@ export default function AnimalSection() {
   const imgRef = useRef<HTMLImageElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
 
-  // 글로벌 TensorFlow 모델 캐싱
   const modelRef = useRef<any>(null);
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -34,10 +37,8 @@ export default function AnimalSection() {
           modelRef.current = await tmImage.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
         }
 
-        // React image element reference
         const imgElement = imgRef.current;
         if (imgElement) {
-          // 약간의 delay를 두어 이미지가 렌더링되게 보장합니다.
           setTimeout(async () => {
             const predictions = await modelRef.current.predict(imgElement);
             setLoading(false);
@@ -52,7 +53,6 @@ export default function AnimalSection() {
               }
             });
 
-            // 결과 영역으로 스무스 스크롤
             setTimeout(() => {
               resultRef.current?.scrollIntoView({ behavior: 'smooth' });
             }, 100);
@@ -76,8 +76,8 @@ export default function AnimalSection() {
         {!imgSrc ? (
           <div id="upload-placeholder">
             <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📷</div>
-            <h3>사진을 업로드하여 분석 시작</h3>
-            <p style={{ color: 'var(--secondary-color)' }}>강아지상 vs 고양이상, 당신의 관상은 어떤 동물에 가까울까요?</p>
+            <h3>{t.animalPlaceholderTitle}</h3>
+            <p style={{ color: 'var(--secondary-color)' }}>{t.animalPlaceholderDesc}</p>
           </div>
         ) : (
           <img 
@@ -99,16 +99,16 @@ export default function AnimalSection() {
 
       {loading && (
         <div id="loading" style={{ textAlign: 'center', margin: '2rem' }}>
-          <p>🤖 인공지능이 이미지의 특징점을 추출하고 있습니다...</p>
+          <p>{t.animalLoading}</p>
         </div>
       )}
 
       {showResult && (
         <div ref={resultRef} id="result-container" className="result-container" style={{ display: 'block' }}>
-          <h3 style={{ textAlign: 'center', fontSize: '1.5rem', marginBottom: '2rem' }}>인공지능 분석 결과</h3>
+          <h3 style={{ textAlign: 'center', fontSize: '1.5rem', marginBottom: '2rem' }}>{t.animalResultTitle}</h3>
           <div className="result-bar-wrapper">
             <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
-              <span>🐶 강아지상</span>
+              <span>{t.animalDogLabel}</span>
               <span id="dog-percent" style={{ color: '#f9a825' }}>{dogPercent}%</span>
             </div>
             <div className="result-bar">
@@ -117,7 +117,7 @@ export default function AnimalSection() {
           </div>
           <div className="result-bar-wrapper">
             <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
-              <span>🐱 고양이상</span>
+              <span>{t.animalCatLabel}</span>
               <span id="cat-percent" style={{ color: '#2980b9' }}>{catPercent}%</span>
             </div>
             <div className="result-bar">
@@ -125,7 +125,7 @@ export default function AnimalSection() {
             </div>
           </div>
           <p style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--secondary-color)', marginTop: '1rem' }}>
-            * 분석 결과는 AI 모델에 기반한 것이며 관상용으로만 참고해주세요.
+            {t.animalWarning}
           </p>
         </div>
       )}
