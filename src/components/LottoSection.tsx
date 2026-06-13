@@ -24,6 +24,22 @@ export default function LottoSection({ t }: LottoSectionProps) {
     setGames(initial);
   }, []);
 
+  function validateLottoNumbers(nums: number[]): boolean {
+    // 1. 홀짝 비율 필터 (Odd/Even): 홀수 개수가 2, 3, 4개인 조합만 허용
+    const oddCount = nums.filter(n => n % 2 !== 0).length;
+    if (oddCount < 2 || oddCount > 4) return false;
+
+    // 2. 총합 범위 필터 (Sum Range): 6개 숫자 합이 100 ~ 175 사이
+    const sum = nums.reduce((a, b) => a + b, 0);
+    if (sum < 100 || sum > 175) return false;
+
+    // 3. 고저 비율 필터 (Low/High): 23 이상의 고수가 2, 3, 4개인 조합만 허용
+    const highCount = nums.filter(n => n >= 23).length;
+    if (highCount < 2 || highCount > 4) return false;
+
+    return true;
+  }
+
   function generateFiveGames() {
     setGames(prev => prev.map(g => ({
       ...g,
@@ -51,11 +67,19 @@ export default function LottoSection({ t }: LottoSectionProps) {
       if (ticks >= maxTicks) {
         clearInterval(interval);
         setGames(prev => prev.map(g => {
-          const finalNums: number[] = [];
-          while (finalNums.length < 6) {
-            const r = Math.floor(Math.random() * 45) + 1;
-            if (!finalNums.includes(r)) finalNums.push(r);
-          }
+          let finalNums: number[] = [];
+          let attempts = 0;
+          const maxAttempts = 500;
+          
+          do {
+            finalNums = [];
+            while (finalNums.length < 6) {
+              const r = Math.floor(Math.random() * 45) + 1;
+              if (!finalNums.includes(r)) finalNums.push(r);
+            }
+            attempts++;
+          } while (!validateLottoNumbers(finalNums) && attempts < maxAttempts);
+
           finalNums.sort((a, b) => a - b);
           return {
             ...g,
